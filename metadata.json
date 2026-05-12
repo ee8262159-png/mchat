@@ -1,0 +1,6 @@
+{
+  "name": "mChat",
+  "description": "A powerful real- essence real-time chat platform supporting image and video sharing with offline capabilities.",
+  "requestFramePermissions": ["microphone", "camera"],
+  "majorCapabilities": []
+}

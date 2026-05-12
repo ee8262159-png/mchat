@@ -1,0 +1,73 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Stores user account information and presence state.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "username": { "type": "string", "description": "Lowercase unique username for search" },
+        "email": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "isOnline": { "type": "boolean" },
+        "lastSeen": { "type": "string", "format": "date-time" },
+        "bio": { "type": "string" }
+      },
+      "required": ["uid", "displayName", "username", "email"]
+    },
+    "Chat": {
+      "title": "Chat Session",
+      "description": "Represents a direct message or group chat.",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["dm", "group"] },
+        "participants": { "type": "array", "items": { "type": "string" } },
+        "name": { "type": "string", "description": "Group name (null for DM)" },
+        "lastMessage": { "type": "object" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "createdBy": { "type": "string" }
+      },
+      "required": ["type", "participants", "updatedAt"]
+    },
+    "Message": {
+      "title": "ChatMessage",
+      "description": "A single message within a chat.",
+      "type": "object",
+      "properties": {
+        "text": { "type": "string" },
+        "type": { "type": "string", "enum": ["text", "image", "video"] },
+        "mediaUrl": { "type": "string" },
+        "senderId": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "readBy": { "type": "array", "items": { "type": "string" } },
+        "reactions": { "type": "object", "description": "Map of userId to emoji reaction" }
+      },
+      "required": ["senderId", "timestamp"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "chats/{chatId}": {
+      "schema": "Chat",
+      "description": "Active chat threads"
+    },
+    "chats/{chatId}/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Individual messages within a chat"
+    },
+    "chats/{chatId}/typing/{userId}": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "isTyping": { "type": "boolean" },
+          "lastUpdate": { "type": "string", "format": "date-time" }
+        }
+      },
+      "description": "Real-time typing status of a user in a chat"
+    }
+  }
+}
